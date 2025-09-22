@@ -1,8 +1,19 @@
 """
-conftest.py
+Combine & dedupe YouTube metadata files into one dataset.
 
-This file provides reusable fixtures and utilities for all of the tests.
+- Recursively scans input dirs for .csv and .zip (reads ALL CSVs inside zips).
+- Adds a 'source_file' column (provenance).
+- Normalizes schema
+- Filters out YouTube Shorts (duration_sec <= 180) when duration is known.
+- Get rid of duplicates; Dedupe key = 'videoId'
+- Writes Parquet and  CSV, plus a summary JSON.
+- Prints one crisp [STATS] line: started | shorts removed | duplicates removed | final.
 
+Example:
+  python scripts/combine_and_dedupe.py \
+    --inputs data/interim data/raw \
+    --output data/processed/all_days.parquet \
+    --also-csv
 """
 import argparse, os, sys, glob, io, zipfile, json, datetime as dt
 import pandas as pd

@@ -1,19 +1,8 @@
 """
-Combine & dedupe YouTube metadata files into one dataset.
+conftest.py
 
-- Recursively scans input dirs for .csv and .zip (reads ALL CSVs inside zips).
-- Adds a 'source_file' column (provenance).
-- Normalizes schema
-- Filters out YouTube Shorts (duration_sec <= 180) when duration is known.
-- Get rid of duplicates; Dedupe key = 'videoId'
-- Writes Parquet and  CSV, plus a summary JSON.
-- Prints one crisp [STATS] line: started | shorts removed | duplicates removed | final.
+This file provides reusable fixtures and utilities for all of the tests.
 
-Example:
-  python scripts/combine_and_dedupe.py \
-    --inputs data/interim data/raw \
-    --output data/processed/all_days.parquet \
-    --also-csv
 """
 
 
@@ -56,7 +45,7 @@ def load_model():
     """
     # prefer ensemble-named models
     prefer = sorted(
-        MODELS_DIR.glob("*Ensemble*.joblib"),
+        MODELS_DIR.rglob("*Ensemble*.joblib"),
         key=lambda p: p.stat().st_mtime,
     )
     if prefer:
@@ -65,7 +54,7 @@ def load_model():
 
     # otherwise take the newest .joblib that is not the preprocess
     candid = sorted(
-        [p for p in MODELS_DIR.glob("*.joblib") if p.name != "preprocess_phase3.joblib"],
+        [p for p in MODELS_DIR.rglob("*.joblib") if p.name != "preprocess_phase3.joblib"],
         key=lambda p: p.stat().st_mtime,
     )
     if candid:
@@ -138,13 +127,13 @@ def model():
     # 2) Find newest model artifact and load
     import joblib
     MODELS_DIR = ROOT / "models"
-    prefer = sorted(MODELS_DIR.glob("*Ensemble*.joblib"), key=lambda p: p.stat().st_mtime)
+    prefer = sorted(MODELS_DIR.rglob("*Ensemble*.joblib"), key=lambda p: p.stat().st_mtime)
     candidates = prefer or sorted(
-        [p for p in MODELS_DIR.glob("*.joblib") if p.name != "preprocess_phase3.joblib"],
+        [p for p in MODELS_DIR.rglob("*.joblib") if p.name != "preprocess_phase3.joblib"],
         key=lambda p: p.stat().st_mtime,
     )
     if not candidates:
-        return None
+        pytest.skip("Model not found under models/**/*.joblib")
 
     try:
         return joblib.load(candidates[-1])

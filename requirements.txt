@@ -8,6 +8,9 @@ tqdm>=4.66
 requests>=2.32
 python-dotenv>=1.0
 
+# Gradient boosting model
+lightgbm>=4.0
+
 # Model explainability
 shap>=0.46.0
 

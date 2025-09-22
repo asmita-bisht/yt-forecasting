@@ -1,0 +1,15 @@
+# virtualenvs & caches
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# secrets
+.env
+
+# data & artifacts
+data/
+reports/executed/
+models/bundles/
+*.joblib
+*.pkl

@@ -1,0 +1,6 @@
+{
+  "winner": "Ensemble(LR+LGBM)",
+  "winner_space": "sparse",
+  "threshold_val_top_frac": 0.3333333333333333,
+  "top_frac": 0.1
+}

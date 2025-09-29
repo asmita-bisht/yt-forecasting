@@ -1,5 +1,5 @@
 """
-test_features.py
+test_model_roundtrip.py
 
 This test verifies model serialization stability.
 
